@@ -322,8 +322,7 @@ if (user &&
 
 ## GitHub Authentication
 - **AI Agent Account**: thefourthhorseman-agentAI
-- **Personal Access Token**: `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`
-- **Legacy Token** (expires Aug 1, 2025): `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`
+- **Personal Access Token**:
 
 ## Development Workflow Guidelines
 
