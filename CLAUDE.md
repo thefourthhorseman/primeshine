@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 PrimeShine is a multi-tenant cleaning service platform that connects homeowners with cleaning service providers. The application consists of two separate repositories:
 - Frontend: React application (`primeshine-front/`) - https://github.com/thefourthhorseman/primeshine-front.git
 - Backend: Node.js/Express API (`primeshine-back/`) - https://github.com/thefourthhorseman/primeshine-back.git
-Fine-grained personal access tokens for Github: 
+
 
 ### Current Architecture Status (Latest)
 - **Job Management System**: Fully implemented with `Job`, `JobAssignment`, and `JobTask` models
