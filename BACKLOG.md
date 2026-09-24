@@ -56,3 +56,56 @@
 - Medium-High priority for production reliability
 - Should be implemented before major production rollout
 - Critical for mobile users with unstable connections
+
+## Frontend Static Asset Consolidation (`public/images` vs `public/media`)
+
+### Current State
+There is no architectural rule separating the two directories — it's a historical
+split. `public/images/` is the original asset folder (Jul 2025); `public/media/`
+was introduced with the landing-page redesign (Dec 2025, commits `924569b`,
+`4381c8c`). Both are plain CRA static assets served from the site root and
+referenced by absolute URL string; no config, helper, or build step treats them
+differently.
+
+**`public/images/` — legacy / non-landing surfaces**
+| Subfolder | Used by |
+|---|---|
+| root (`logo2.jpg`, `og-image.jpg`, `cleaning-hero.jpg`) | `Seo.js`, `siteInfo.js`, `TopBar.js`, `Login.js`, `ResetPasswordPage.js`, `MaidPortalLayout.js` |
+| `review-photos/` | `CustomerReviews.js` |
+| `services/` | `servicesData.json`, `Home.js` |
+| `tips/` | `content/cleaning-tips/*.json` |
+
+**`public/media/` — the landing-page redesign**
+| Subfolder | Used by |
+|---|---|
+| `gallery/` | `Landing.js` media gallery + background videos |
+| `features/` | `Landing.js` feature cards |
+| `services/` | `ServicesGrid.js`, `OurServices.js`, `ServiceCarousel.js` |
+| `promo/` | promo section |
+
+The one genuine design difference: `media/services/` is keyed to ServiceCatalog
+IDs (`svc_<serviceId>.webp`) and resolved by convention in
+`OurServices.js:176-179`, whereas `images/services/` is hand-referenced by
+filename. `media/` is also format-modern (`.webp` stills, `.webm` video).
+
+### Broken References (migration never finished)
+- `ServiceCarousel.js:19-49` — all 7 entries point at `/media/services/deep-cleaning.jpg`,
+  `move-cleaning.png`, `pool-cleaning.jpg`, etc. Those files live in
+  `images/services/`, not `media/services/`. Looks like a `/images/` → `/media/`
+  find-and-replace without moving the files.
+- `HeroTestimonialSection.js` — `/media/avatars/*.png` (directory does not exist)
+  and `/media/services/persona_maid_[1-4].png` are all missing; the persona image
+  actually exists as `/images/persona_maid1.webp`.
+- Also referenced but absent: `/images/quotation-hero.png`, `/images/tips/step*.jpg`,
+  `/images/services/deep-cleaning.jpg`, `s2.jpg`, `s3.jpg`.
+- Both trees contain WSL `:Zone.Identifier` files that ship into the build.
+
+### Proposed Rule
+- `media/` = marketing/landing content (webp/webm, service-ID-keyed)
+- `images/` = app chrome, brand, and SEO assets
+- Move stragglers to match, fix the broken paths above, and gitignore/strip
+  `:Zone.Identifier` files from the build
+
+### Priority
+- Low — cosmetic/organizational, except the broken references, which are
+  user-visible missing images on the landing page and service carousel

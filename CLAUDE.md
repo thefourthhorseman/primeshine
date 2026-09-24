@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Ontology: Technician (formerly "maid")
+
+Service providers are called **technicians** in every user-facing surface
+(UI labels, emails, SMS, app copy) and in ALL NEW code (variables, routes,
+components — e.g. `/api/technicians`, `technicianId`). Legacy identifiers
+(`MaidProfile`, `maidId`, `/api/maids`, `/maid-portal`, DB tables) are kept
+for stability and aliased where needed — never introduce NEW code using the
+legacy word. The mobile app (`primeshine-tech/`) is technician-vocabulary
+throughout; its `lib/api/adapter.ts` is the only place that translates to
+the legacy wire format.
+
 ## Project Overview
 
 PrimeShine is a multi-tenant cleaning service platform that connects homeowners with cleaning service providers. The application consists of two separate repositories:
