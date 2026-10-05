@@ -109,3 +109,26 @@ filename. `media/` is also format-modern (`.webp` stills, `.webm` video).
 ### Priority
 - Low — cosmetic/organizational, except the broken references, which are
   user-visible missing images on the landing page and service carousel
+
+## Real-Time Job Status for Customers
+
+Shipped first (2026-10-05): the customer portal (`UserBookings.js`) re-fetches
+`/api/jobs/my-jobs` every 20 s while the tab is visible and on tab focus. Status
+changes (TECH EN ROUTE → IN PROGRESS → COMPLETED) show within ~20 s. The two
+items below are parked until that delay or reach proves insufficient.
+
+### 1. Live push via Server-Sent Events
+- New authenticated stream endpoint (e.g. `GET /api/jobs/my-jobs/stream`) the customer page subscribes to; falls back to polling if the stream drops
+- Publish an event from the en-route, start, complete (and task toggle) actions so the change appears instantly
+- Send a heartbeat every ~25 s: Heroku closes connections idle for 55 s
+- In-memory pub/sub works only on a single web dyno (current setup); scaling to 2+ dynos needs Redis pub/sub
+- Prerequisite for a live technician map (`techLat`/`techLng` already exist on Jobs; no client sends them since the Expo app was lost)
+
+### 2. Customer notifications on status changes (SMS / email)
+- Text the customer "Your technician is on the way" when the technician taps en route; optionally on job start and completion
+- Twilio is already configured in the backend; log sends to `NotificationLog`
+- Needs a per-customer opt-in/opt-out (SMS consent) and a tenant-branded message template
+- Reaches customers who don't have the portal open, so it complements the portal rather than replacing it
+
+### Priority
+Medium (notifications) / Low (SSE). Revisit after the core operating flows run without HCP.
