@@ -1,7 +1,7 @@
 # Square Payments Integration — Design & Roadmap
 
 **Date:** 2026-10-05
-**Status:** Phase 0 DONE locally 2026-10-05: sandbox seller connected through the real OAuth flow, tokens stored encrypted, refresh verified. Not committed. O1/O2 resolved 2026-10-05 (now D5/D6).
+**Status:** Phases 0–1 (invoices) DEPLOYED to production 2026-10-05 (backend 18b8ffd, frontend 497eb15, migrations run). Next: connect the 5 Fairies Square account in production; then Phases 2–5.
 **Scope:** Replace Stripe with Square as PrimeShine's card processor. Each tenant connects its own Square account (OAuth). Square covers **saved-card recurring billing** and **invoice / quote pay links**; PrimeShine keeps its own invoice emails and public pay page.
 
 ---
